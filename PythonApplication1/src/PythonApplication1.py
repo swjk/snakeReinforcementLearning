@@ -5,19 +5,19 @@ import random
 WIDTH = 600
 HEIGHT = 600
 SCREEN_TITLE = "snake"
-RATE = 60
+RATE = 5
 
 
 class Item(arcade.Sprite):
     def __init__(self):
-        super().__init__("./texture.jpg",1) 
+        super().__init__("./texture.jpg",1)
         self.position = (100,100)
         self.size = 20
         self.height = 20
         self.width = 20
 
     def changeLocation(self):
-       self.position =(random.randint(20,WIDTH-20), random.randint(20, HEIGHT-20)) 
+       self.position =(random.randint(20,WIDTH-20), random.randint(20, HEIGHT-20))
 
     def draw(self):
         arcade.draw_lrtb_rectangle_filled(self.position[0],self.position[0] + self.size, self.position[1], self.position[1] - self.size, [100,100,100])
@@ -28,8 +28,8 @@ class Item(arcade.Sprite):
 
 class SnakeTail(arcade.Sprite):
     def __init__(self,position):
-        super().__init__("./texture.jpg",1) 
-        self.position = position    
+        super().__init__("./texture.jpg",1)
+        self.position = position
         self.size = 20
         self.height = 20
         self.width = 20
@@ -56,7 +56,7 @@ class Snake():
         newSprite = SnakeTail(pos)
         newSprite.position = pos
         return newSprite
-    
+
 
 
     def increaseLength(self):
@@ -81,7 +81,7 @@ class Snake():
         elif symbol == arcade.key.DOWN and (self.directionIndex == 3):
             self.directionIndex = (self.directionIndex + 1) % len(self.possibleMovements)
 
-        
+
         self.direction = self.possibleMovements[self.directionIndex]
 
     def draw(self):
@@ -110,7 +110,7 @@ class GameWindow(arcade.Window):
         arcade.start_render()
         self.snake.draw()
         self.item.draw()
-        
+
 
 
     def on_key_press(self,symbol, modifiers):
@@ -138,7 +138,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
