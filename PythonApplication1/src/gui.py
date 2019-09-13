@@ -3,67 +3,43 @@ from environment import Type
 import numpy as np
 import arcade
 
-class Block(arcade.Sprite):
-    def __init__(self,lx,rx,top,bottom):
-        self.lx = lx
-        self.rx = rx
-        self.top = top
-        self.bottom = bottom
+class Block():
+    @staticmethod
+    def draw(lx,rx,top,bottom):
+        try:
+            arcade.draw_lrtb_rectangle_filled(lx,rx,top,bottom,arcade.color.BLACK)
+        except:
+            print ("Drawing Error")
 
-    def draw(self):
-        arcade.draw_lrtb_rectangle_filled(self.lx,self.rx,self.top,self.bottom,arcade.color.BLACK)
-
-
-class Wall(arcade.Sprite):
-    def __init__(self,lx,rx,top,bottom):
-        self.lx = lx
-        self.rx = rx
-        self.top = top
-        self.bottom = bottom
-
-    def draw(self):
-        arcade.draw_lrtb_rectangle_filled(self.lx,self.rx,self.top,self.bottom,arcade.color.GRAY)
-
+class Wall():
+    def draw(lx,rx,top,bottom):
+        try:
+            arcade.draw_lrtb_rectangle_filled(lx,rx,top,bottom,arcade.color.GRAY)
+        except:
+            print ("Drawing Error")
 
 class SnakeHead(arcade.Sprite):
-    def __init__(self,lx,rx,top,bottom):
-        self.lx = lx
-        self.rx = rx
-        self.top = top
-        self.bottom = bottom
 
-    def draw(self):
-        arcade.draw_polygon_filled([[lx,bottom],[rx,bottom], [(lx+rx)/2,top]], arcade.color.RED)
+    def draw(lx,rx,top,bottom):
+        try:
+            arcade.draw_polygon_filled([[lx,bottom],[rx,bottom], [(lx+rx)/2,top]], arcade.color.RED)
+        except:
+            print ("Drawing Error")
+class SnakeTail():
 
-class SnakeTail(arcade.Sprite):
-    def __init__(self,lx,rx,top,bottom):
-        self.lx = lx
-        self.rx = rx
-        self.top = top
-        self.bottom = bottom
-
-    def draw(self):
-        arcade.draw_lrtb_rectangle_filled(self.lx,self.rx,self.top,self.bottom,arcade.color.BLUE)
+    def draw(lx,rx,top,bottom):
+        arcade.draw_lrtb_rectangle_filled(lx,rx,top,bottom,arcade.color.BLUE)
 
 class Food(arcade.Sprite):
-    def __init__(self,lx,rx,top,bottom):
-        self.lx = lx
-        self.rx = rx
-        self.top = top
-        self.bottom = bottom
 
-    def draw(self):
-        arcade.draw_lrtb_rectangle_filled(self.lx,self.rx,self.top,self.bottom,arcade.color.ORANGE)
+    def draw(lx,rx,top,bottom):
+        arcade.draw_lrtb_rectangle_filled(lx,rx,top,bottom,arcade.color.ORANGE)
 
-class Empty(arcade.Sprite):
-    def __init__(self,lx,rx,top,bottom):
-        self.lx = lx
-        self.rx = rx
-        self.top = top
-        self.bottom = bottom
+class Empty():
 
-    def draw(self):
-        arcade.draw_lrtb_rectangle_filled(self.lx,self.rx,self.top,self.bottom,arcade.color.WHITE)
+    def draw(lx,rx,top,bottom):
+        arcade.draw_lrtb_rectangle_filled(lx,rx,top,bottom,arcade.color.WHITE)
+
 
 
 class Gui(object):
@@ -78,16 +54,22 @@ class Gui(object):
         env_shape = self.env.env.shape
         x_step = (self.x_end - self.x_start) / env_shape[1]
         y_step = (self.y_end - self.y_start) / env_shape[0]
+
         for (y,x), value in np.ndenumerate(self.env.env):
+
             if value == Type.SNAKE_HEAD:
-                SnakeHead(self.x_start + x_step*x, self.x_start + x_step*(x+1),self.y_start+y_step*y,self.y_start+y_step*(y+1)).draw()
+
+                SnakeHead.draw(self.x_start + x_step*x, self.x_start + x_step*(x+1),self.y_end-(y_step*y),self.y_end-y_step*(y+1))
             elif value == Type.SNAKE_TAIL:
-                SnakeTail(self.x_start + x_step*x, self.x_start + x_step*(x+1),self.y_start+y_step*y,self.y_start+y_step*(y+1)).draw()
+                SnakeTail.draw(self.x_start + x_step*x, self.x_start + x_step*(x+1),self.y_end-(y_step*y),self.y_end-y_step*(y+1))
             elif value == Type.FOOD:
-                Food(self.x_start + x_step*x, self.x_start + x_step*(x+1),self.y_start+y_step*y,self.y_start+y_step*(y+1)).draw()
+                Food.draw(self.x_start + x_step*x, self.x_start + x_step*(x+1),self.y_end-(y_step*y),self.y_end-y_step*(y+1))
+
             elif value == Type.BLOCK:
-                Block(self.x_start + x_step*x, self.x_start + x_step*(x+1),self.y_start+y_step*y,self.y_start+y_step*(y+1)).draw()
+                Block.draw(self.x_start + x_step*x, self.x_start + x_step*(x+1),self.y_end-(y_step*y),self.y_end-y_step*(y+1))
+
             elif value == Type.EMPTY:
-                Empty(self.x_start + x_step*x, self.x_start + x_step*(x+1),self.y_start+y_step*y,self.y_start+y_step*(y+1)).draw()
+                Empty.draw(self.x_start + x_step*x, self.x_start + x_step*(x+1),self.y_end-(y_step*y),self.y_end-y_step*(y+1))
+
             elif value == Type.WALL:
-                Wall(self.x_start + x_step*x, self.x_start + x_step*(x+1),self.y_start+y_step*y,self.y_start+y_step*(y+1)).draw()
+                Wall.draw(self.x_start + x_step*x, self.x_start + x_step*(x+1),self.y_end-(y_step*y),self.y_end-y_step*(y+1))

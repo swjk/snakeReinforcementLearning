@@ -21,6 +21,10 @@ class Environment(object):
         self.food  = Food(grid.find_init_food())
         self.grid  = grid.create_grid()
 
+    def __str__(self):
+        return np.array_str(self.env)
+
+
 
     def updateEnv(self):
         pass

@@ -8,8 +8,6 @@ class Direction(object):
     LEFT  = Vector(-1,0)
     RIGHT = Vector(1,0)
 
-
-
 class Snake(object):
     def __init__(self,head,tail):
         self.head   = head

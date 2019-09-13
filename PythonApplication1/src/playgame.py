@@ -15,13 +15,16 @@ class GameWindow(arcade.Window):
         arcade.set_background_color(arcade.color.AMAZON)
 
         self.env = environment.Environment(level1)
-
+        print(self.env)
         self.gui = gui.Gui(SCREEN_WIDTH,SCREEN_HEIGHT,PADDING,self.env)
 
 
     def on_draw(self):
         arcade.start_render()
+        #arcade.draw_lrtb_rectangle_filled(20,200,200,100, arcade.color.WISTERIA)
+        #arcade.draw_circle_outline(300, 285, 18, arcade.color.WISTERIA, 3)
         self.gui.draw()
+        arcade.finish_render()
 
 
 
