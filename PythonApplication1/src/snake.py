@@ -16,7 +16,7 @@ class Snake(object):
         self.direction = Direction.UP
         self.velocity  = 1
         self.tail = deque(tail)
-        self.extend = false
+        self.extend = False
 
 
     def get_head(self):
