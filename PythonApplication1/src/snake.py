@@ -1,6 +1,6 @@
 from collections import deque
 from util import Vector,Point
-
+import copy
 
 class Direction(object):
     UP    = Vector(0,-1)
@@ -15,6 +15,8 @@ class Snake(object):
         self.velocity  = 1
         self.tail = deque(tail)
         self.extend = False
+        self.snake_directions = [Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT]
+
 
 
     def get_head(self):
@@ -23,8 +25,17 @@ class Snake(object):
     def get_tail(self):
         return self.tail
 
+    def turn_left(self):
+        current_dir_index = self.snake_directions.index(self.direction)
+        self.direction = self.snake_directions[(current_dir_index - 1) % len(self.snake_directions)]
+
+    def turn_right(self):
+        current_dir_index = self.snake_directions.index(self.direction)
+        self.direction = self.snake_directions[(current_dir_index+1) % len(self.snake_directions)]
+
+
     def move(self):
         if not self.extend:
             self.tail.pop()
-        self.tail.appendleft(self.head)
-        self.head = (self.head).addVector(self.direction)
+        self.tail.appendleft(copy.copy(self.head))
+        self.head.addVector(self.direction)

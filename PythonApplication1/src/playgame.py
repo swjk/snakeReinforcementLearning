@@ -1,13 +1,14 @@
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 800
+SCREEN_WIDTH = 600
+SCREEN_HEIGHT = 600
 SCREEN_TITLE = "SNAKE"
-PADDING = 200
+PADDING = 100
 
 from level import level1
 import environment
 import snake
 import arcade
 import gui
+from util import FPSCounter
 
 class GameWindow(arcade.Window):
     def __init__(self):
@@ -15,26 +16,25 @@ class GameWindow(arcade.Window):
         arcade.set_background_color(arcade.color.AMAZON)
 
         self.env = environment.Environment(level1)
-        print(self.env)
         self.gui = gui.Gui(SCREEN_WIDTH,SCREEN_HEIGHT,PADDING,self.env)
-
+        self.set_update_rate(1/30)
+        self.fps = FPSCounter()
 
     def on_draw(self):
+        fps = self.fps.get_fps()
+        print(fps)
+        self.fps.tick()
+
         arcade.start_render()
-        #arcade.draw_lrtb_rectangle_filled(20,200,200,100, arcade.color.WISTERIA)
-        #arcade.draw_circle_outline(300, 285, 18, arcade.color.WISTERIA, 3)
         self.gui.draw()
         arcade.finish_render()
 
-
-
-
     def on_key_press(self,symbol, modifiers):
-        if symbol == arcade.key.LEFT or symbol == arcade.key.RIGHT or symbol == arcade.key.UP or symbol == arcade.key.DOWN:
-            pass
+        self.env.change_snake_dir(symbol)
 
-    def update(self,x):
-        pass
+    def on_update(self,x):
+        self.env.update()
+        self.gui.update()
 
 
 
