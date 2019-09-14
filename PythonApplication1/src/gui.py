@@ -50,15 +50,25 @@ class SnakeHead(arcade.Sprite):
         # except:
         #     print ("Drawing Error")
 class SnakeTail(arcade.Sprite):
-    def __init__(self,lx,rx,top, bottom):
+    def __init__(self,lx=None,rx=None,top=None, bottom=None, center_x=None, center_y=None, height=None, width=None):
         super().__init__("./small.png")
-
-        self.center_x = (lx+rx)/2
-        self.center_y = (top+bottom)/2
-        self.height = abs(top-bottom)
-        self.width = abs(lx-rx)
-
         self._set_color(arcade.color.RED)
+        if center_x == None:
+            self.center_x = (lx+rx)/2
+            self.width = abs(lx-rx)
+        else:
+            self.center_x = center_x
+            self.width = width
+        if center_y == None:
+            self.center_y = (top+bottom)/2
+            self.height = abs(top-bottom)
+        else:
+            self.center_y = center_y
+            self.height = height
+
+
+
+
 class Food(arcade.Sprite):
     def __init__(self,lx,rx,top, bottom):
         super().__init__("./small.png")
@@ -139,12 +149,22 @@ class Gui(object):
 
         x,y = self.env.snake.get_head().getTuple()
 
-        for idx, sprite in reversed(list(enumerate(self.snake_sprite.sprite_list))):
+        if self.env.food.relocated:
+            for food_sprite in self.food_sprite.sprite_list:
+                x_food,y_food =  self.env.food.get_food().getTuple()
+                center_x = (self.x_start + x_step*(x_food+1) + self.x_start + x_step*x_food) / 2
+                center_y = ((self.y_end-(y_step*y_food)) + (self.y_end-y_step*(y_food+1))) / 2
+                food_sprite.set_position(center_x, center_y)
 
+        last_sprite_center_x, last_sprite_center_y = self.snake_sprite.sprite_list[-1].center_x,self.snake_sprite.sprite_list[-1].center_y
+
+        for idx, sprite in reversed(list(enumerate(self.snake_sprite.sprite_list))):
             if idx > 0:
                 print (idx)
                 sprite.set_position(self.snake_sprite.sprite_list[idx-1].center_x,self.snake_sprite.sprite_list[idx-1].center_y)
 
+        if self.env.snake.extend:
+             self.snake_sprite.append(SnakeTail(center_x=last_sprite_center_x, center_y=last_sprite_center_y, height=y_step, width=x_step))
 
         center_x = (self.x_start + x_step*(x+1) + self.x_start + x_step*x) / 2
         center_y = ((self.y_end-(y_step*y)) + (self.y_end-y_step*(y+1))) / 2

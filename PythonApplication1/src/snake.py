@@ -17,8 +17,6 @@ class Snake(object):
         self.extend = False
         self.snake_directions = [Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT]
 
-
-
     def get_head(self):
         return self.head
 
@@ -33,6 +31,12 @@ class Snake(object):
         current_dir_index = self.snake_directions.index(self.direction)
         self.direction = self.snake_directions[(current_dir_index+1) % len(self.snake_directions)]
 
+    def extend_tail(self):
+        self.extend = True
+
+    def update(self):
+        self.move()
+        self.extend = False
 
     def move(self):
         if not self.extend:

@@ -3,6 +3,7 @@ import numpy as np
 from util import Point
 import snake
 import arcade
+import random
 
 
 class Type(object):
@@ -20,10 +21,8 @@ class Environment(object):
         self.grid = Grid()
         self.env   = np.copy(self.grid.load_level(level))
         self.snake = snake.Snake(self.grid.find_init_snake_head(),self.grid.find_init_snake_tail())
-        self.food  = Food(self.grid.find_init_food())
+        self.food  = Food(self.grid.find_init_food(), self.grid.get_cell_shape())
         self.grid.create_grid()
-
-
         self.counter = 0
 
     def __str__(self):
@@ -50,17 +49,32 @@ class Environment(object):
             self.snake.turn_right()
 
     def update_env(self):
+        self.snake.update()
+        self.food.update()
         self.env = np.copy(self.grid.get_cells())
-        self.place_snake(self.env)
         self.place_food(self.env)
+        self.place_snake(self.env)
+
+    def check_collisions(self):
+        head_point = self.snake.get_head()
+        head_x,head_y = head_point.getTuple()
+        print (self.food.get_food())
+        print (head_point)
+        if head_point in self.snake.get_tail():
+            print ("Collision")
+        elif head_point == self.food.get_food():
+
+            print ("Extend + new food")
+            self.snake.extend_tail()
+            self.food.random_relocate(self.env)
+
+        elif self.grid.get_cells()[head_y][head_x] in (Type.BLOCK, Type.WALL):
+            print ("Collision")
+
 
     def update(self):
-
-        self.snake.move()
         self.update_env()
-        self.counter +=1
-
-
+        self.check_collisions()
 
 
 
@@ -91,6 +105,9 @@ class Grid(object):
 
     def get_cells(self):
         return self._cells
+
+    def get_cell_shape(self):
+        return self._cells.shape
 
     def load_level(self, level):
         self._cells = np.array([[self._cell_type_env[char] for char in line]
@@ -126,11 +143,24 @@ class Grid(object):
 
 
 class Food(object):
-    def __init__(self,pos):
+    def __init__(self,pos,grid_shape):
         self.pos = pos
+        self.grid_shape = grid_shape
+        self.relocated = False
 
     def get_food(self):
         return self.pos
 
-    def random_relocate():
-        pass
+    def update(self):
+        self.relocate = False
+
+    def random_relocate(self, env):
+        print (self.grid_shape)
+        y = random.randint(0,self.grid_shape[0]-1)
+        x = random.randint(0,self.grid_shape[1]-1)
+        while env[y,x] != Type.EMPTY:
+            y = random.randint(0,self.grid_shape[0]-1)
+            x = random.randint(0,self.grid_shape[1]-1)
+            print (y)
+        self.pos = Point(x,y)
+        self.relocated = True

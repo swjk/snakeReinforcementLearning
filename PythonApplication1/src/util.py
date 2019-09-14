@@ -45,6 +45,9 @@ class Point(object):
     def __copy__(self):
         return Point(self.x,self.y)
 
+    def __eq__(self,other):
+        return self.x == other.x and self.y == other.y
+
     def getTuple(self):
         return self.x,self.y
 

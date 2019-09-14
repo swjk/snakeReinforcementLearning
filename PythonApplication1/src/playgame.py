@@ -17,7 +17,7 @@ class GameWindow(arcade.Window):
 
         self.env = environment.Environment(level1)
         self.gui = gui.Gui(SCREEN_WIDTH,SCREEN_HEIGHT,PADDING,self.env)
-        self.set_update_rate(1/30)
+        self.set_update_rate(1/10)
         self.fps = FPSCounter()
 
     def on_draw(self):
