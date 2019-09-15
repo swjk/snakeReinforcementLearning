@@ -58,19 +58,16 @@ class Environment(object):
     def check_collisions(self):
         head_point = self.snake.get_head()
         head_x,head_y = head_point.getTuple()
-        print (self.food.get_food())
-        print (head_point)
+
         if head_point in self.snake.get_tail():
-            print ("Collision")
+
             return True
         elif head_point == self.food.get_food():
-
-            print ("Extend + new food")
             self.snake.extend_tail()
             self.food.random_relocate(self.env)
             return False
         elif self.grid.get_cells()[head_y][head_x] in (Type.BLOCK, Type.WALL):
-            print ("Collision")
+    
             return True
 
     def update(self):

@@ -22,13 +22,14 @@ class GameWindow(arcade.Window):
 
         self.env = environment.Environment(level1)
         self.gui = gui.Gui(SCREEN_WIDTH,SCREEN_HEIGHT,PADDING,self.env)
-        self.set_update_rate(1/3)
+        self.set_update_rate(1/60)
         self.fps = FPSCounter()
         self.gamestate = GameState.GAME_RUNNING
+        self.timer = 0
 
     def on_draw(self):
         fps = self.fps.get_fps()
-        print(fps)
+        
         self.fps.tick()
 
         arcade.start_render()
@@ -42,10 +43,22 @@ class GameWindow(arcade.Window):
         if(self.gamestate == GameState.GAME_OVER):
             pass
         elif(self.gamestate == GameState.GAME_RUNNING):
-            update_result = self.env.update()
-            self.gui.update()
-            if update_result:
-                self.gamestate = GameState.GAME_OVER
+            if self.timer + x > 1/10:
+                self.timer = 0
+                update_result = self.env.update()
+                self.gui.update()
+                if update_result:
+                    self.gamestate = GameState.GAME_OVER
+
+
+            else:
+                self.timer += x
+
+
+
+
+
+
 
 
 def main():
