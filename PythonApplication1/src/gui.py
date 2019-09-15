@@ -3,6 +3,7 @@ from environment import Type
 import numpy as np
 import arcade
 from snake import Direction
+from playgame import GameState
 
 class Block(arcade.Sprite):
     def __init__(self,lx,rx,top, bottom):
@@ -35,20 +36,6 @@ class SnakeHead(arcade.Sprite):
 
         self._set_color(arcade.color.BLUE)
 
-    # @staticmethod
-    # def draw(lx,rx,top,bottom, direction):
-
-        # try:
-        #     if direction == Direction.UP:
-        #         arcade.draw_polygon_filled([[lx,bottom],[rx,bottom], [(lx+rx)/2,top]], arcade.color.RED)
-        #     elif direction == Direction.DOWN:
-        #         arcade.draw_polygon_filled([[lx,top],[rx,top], [(lx+rx)/2,bottom]], arcade.color.RED)
-        #     elif direction == Direction.LEFT:
-        #         arcade.draw_polygon_filled([[rx,top],[rx,bottom], [(lx),(top+bottom)/2]], arcade.color.RED)
-        #     elif direction == Direction.RIGHT:
-        #         arcade.draw_polygon_filled([[lx,top],[lx,bottom], [(rx),(top+bottom)/2]], arcade.color.RED)
-        # except:
-        #     print ("Drawing Error")
 class SnakeTail(arcade.Sprite):
     def __init__(self,lx=None,rx=None,top=None, bottom=None, center_x=None, center_y=None, height=None, width=None):
         super().__init__("./small.png")
@@ -135,10 +122,20 @@ class Gui(object):
         x,y = self.env.food.get_food().getTuple()
         self.food_sprite.append(Food(self.x_start + x_step*x, self.x_start + x_step*(x+1),self.y_end-(y_step*y),self.y_end-y_step*(y+1)))
 
-    def draw(self):
-        self.grid_sprite.draw()
-        self.snake_sprite.draw()
-        self.food_sprite.draw()
+    def draw_game_over(self):
+
+        output = "Game Over"
+        arcade.draw_text(output, 100, 100, arcade.color.WHITE, 54)
+
+
+
+    def draw(self, gamestate):
+        if gamestate == GameState.GAME_RUNNING:
+            self.grid_sprite.draw()
+            self.snake_sprite.draw()
+            self.food_sprite.draw()
+        else:
+            self.draw_game_over()
 
 
     def update(self):

@@ -10,6 +10,11 @@ import arcade
 import gui
 from util import FPSCounter
 
+
+class GameState(object):
+    GAME_RUNNING = 0
+    GAME_OVER = 1
+
 class GameWindow(arcade.Window):
     def __init__(self):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
@@ -17,8 +22,9 @@ class GameWindow(arcade.Window):
 
         self.env = environment.Environment(level1)
         self.gui = gui.Gui(SCREEN_WIDTH,SCREEN_HEIGHT,PADDING,self.env)
-        self.set_update_rate(1/10)
+        self.set_update_rate(1/3)
         self.fps = FPSCounter()
+        self.gamestate = GameState.GAME_RUNNING
 
     def on_draw(self):
         fps = self.fps.get_fps()
@@ -26,17 +32,20 @@ class GameWindow(arcade.Window):
         self.fps.tick()
 
         arcade.start_render()
-        self.gui.draw()
+        self.gui.draw(self.gamestate)
         arcade.finish_render()
 
     def on_key_press(self,symbol, modifiers):
         self.env.change_snake_dir(symbol)
 
     def on_update(self,x):
-        self.env.update()
-        self.gui.update()
-
-
+        if(self.gamestate == GameState.GAME_OVER):
+            pass
+        elif(self.gamestate == GameState.GAME_RUNNING):
+            update_result = self.env.update()
+            self.gui.update()
+            if update_result:
+                self.gamestate = GameState.GAME_OVER
 
 
 def main():
