@@ -5,6 +5,7 @@ import snake
 import arcade
 import random
 from dql import AgentActions
+from gamestate import SnakeEnvState
 
 
 class Type(object):
@@ -63,15 +64,15 @@ class Environment(object):
         head_x,head_y = head_point.getTuple()
 
         if head_point in self.snake.get_tail():
-
-            return True
+            return SnakeEnvState.COLLISION
         elif head_point == self.food.get_food():
             self.snake.extend_tail()
             self.food.random_relocate(self.env)
-            return False
+            return SnakeEnvState.EATEN
         elif self.grid.get_cells()[head_y][head_x] in (Type.BLOCK, Type.WALL):
+            return SnakeEnvState.COLLISION
 
-            return True
+        return SnakeEnvState.NORM
 
     def update(self):
         self.update_env()

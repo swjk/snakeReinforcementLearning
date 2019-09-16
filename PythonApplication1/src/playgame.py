@@ -3,6 +3,8 @@ SCREEN_HEIGHT = 600
 SCREEN_TITLE = "SNAKE"
 PADDING = 200
 
+
+
 from level import level1
 import environment
 import snake
@@ -11,7 +13,7 @@ import gui
 from util import FPSCounter
 from dql import Dql
 from PIL import Image
-from gamestate import GameState
+from gamestate import GameState,SnakeEnvState,Reward
 
 class GameWindow(arcade.Window):
     def __init__(self):
@@ -47,15 +49,26 @@ class GameWindow(arcade.Window):
         if(self.gamestate == GameState.GAME_OVER):
             pass
         elif(self.gamestate == GameState.GAME_RUNNING):
-            if self.timer + x > 1/10:
-                self.timer = 0
-                update_result = self.env.update()
-                self.gui.update()
-                if update_result:
-                    self.gamestate = GameState.GAME_OVER
+            snake_env_states =  self.env.update()
+            self.gui.update()
+            if snake_env_state == SnakeEnvState.EATEN:
+                return Reward.POS
+            elif snake_env_states == SnakeEnvState.COLLISION:
+                self.gamestate = GameState.GAME_OVER
+                return Reward.NEG
+            else
+                return Reward.NORM
 
-            else:
-                self.timer += x
+
+            # if self.timer + x > 1/10:
+            #     self.timer = 0
+            #     update_result = self.env.update()
+            #     self.gui.update()
+            #     if update_result:
+            #         self.gamestate = GameState.GAME_OVER
+            #
+            # else:
+            #     self.timer += x
 
 
 

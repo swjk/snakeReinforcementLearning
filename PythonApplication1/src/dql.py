@@ -4,6 +4,7 @@ from tensorflow.python.keras.models import Sequential
 import numpy as np
 from enum import Enum
 
+N = 1000
 
 class AgentActions(Enum):
     LEFT  = 0
@@ -13,13 +14,32 @@ class AgentActions(Enum):
 class Dql(object):
 
     def __init__(self):
-        a = np.memmap("test.dat", dtype='float32', mode="w+", shape=(5,5))
-        a[1,2] = 3
+        self.sequences_prev = np.memmap("sequences_prev.dat", dtype='float32', mode="w+", shape=(N,200,800))
+        self.sequences_curr = np.memmap("sequences_curr.dat", dtype='float32', mode="w+", shape=(N,200,800))
+        self.sequences_tns = np.memmap("sequences_prev.dat", dtype='float32', mode="w+", shape=(N,1,2))
+        self.nextpos = 0
 
-        print (a)
 
+    def store_transition(o_s,action_t,reward_t,c_s):
+        #200*4+200*4+1
+        sequence_prev = np.concatenate(o_s[0],o_s[1],o_s[2],o_s[3])
+        sequence_curr = np.concatenate(c_s[0],c_s[1],c_s[2],c_s[3])
+        sequence_tns = np.array([action_t, reward_t])
 
+        self.sequences_prev[self.nextpos] = sequence_prev
+        self.sequences_curr[self.nextpos] = sequence_curr
+        self.sequences_tns[self.nextpos] = sequence_tns
+        self.nextpos += 1
 
+    def get_transition(index):
+        sequence_prev = self.sequences_prev[index]
+        sequence_curr = self.sequences_curr[index]
+        sequence_tns  = self.sequences_tns[index]
+
+        return sequence_prev, sequence_curr, sequence_tns
+
+    def get_storage_pos():
+        return self.nextpos
 
     def create_model():
         self.model = Sequential()
@@ -34,5 +54,8 @@ class Dql(object):
         self.model.compile(loss="mean_squared_error", optimizer='sgd')
 
 
-    def train_model():
-        pass
+    def fit(input,expected_output):
+        self.model.fit(input,expected_output)
+
+    def prediction(data):
+        return self.model.predict(data)
