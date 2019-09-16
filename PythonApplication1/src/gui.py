@@ -124,9 +124,9 @@ class Gui(object):
         self.food_sprite.append(Food(self.x_start + x_step*x, self.x_start + x_step*(x+1),self.y_end-(y_step*y),self.y_end-y_step*(y+1)))
 
     def draw_game_over(self):
-
-        output = "Game Over"
-        arcade.draw_text(output, 100, 100, arcade.color.WHITE, 54)
+        pass
+        #output = "Game Over"
+        #arcade.draw_text(output, 100, 100, arcade.color.WHITE, 54)
 
 
 
