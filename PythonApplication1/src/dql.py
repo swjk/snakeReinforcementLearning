@@ -4,7 +4,7 @@ from tensorflow.python.keras.models import Sequential
 import numpy as np
 from enum import Enum
 
-N = 100
+N = 1000
 
 class AgentActions(Enum):
     LEFT  = 0

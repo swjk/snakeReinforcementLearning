@@ -74,12 +74,11 @@ def main():
                 print(model.prediction(s_curr))
                 y = s_tns[1] + GAMMA * np.max(model.prediction(s_curr))
             s_prev = s_prev.reshape(1,4,100,100,1)
-            model.fit(s_prev,np.array([[0.4,0.2,0.4]]))
 
+            target = np.array([0,0,0])
+            target[s_tns[0]] = y
 
-
-
-
+            model.fit(s_prev,np.array([target]))
 
         else:
             current_sequence.append(image_preprocess(arcade.get_image(),t))
