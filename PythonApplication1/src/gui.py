@@ -3,7 +3,7 @@ from environment import Type
 import numpy as np
 import arcade
 from snake import Direction
-from playgame import GameState
+from gamestate import GameState
 from PIL import Image
 
 class Block(arcade.Sprite):
@@ -146,19 +146,6 @@ class Gui(object):
         y_step = (self.y_end - self.y_start) / env_shape[0]
 
         x,y = self.env.snake.get_head().getTuple()
-
-        image = arcade.get_image()
-        image = image.crop((self.x_start,self.y_start,self.x_end,(self.y_end)))
-        image = image.convert('LA')
-        imagenum = np.array(image)
-        imagenum = imagenum[...,:1]
-
-        print(imagenum.reshape((200,200)))
-        print(imagenum.shape)
-
-        image.save("./images.png")
-
-
 
         if self.env.food.relocated:
             for food_sprite in self.food_sprite.sprite_list:

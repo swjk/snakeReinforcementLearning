@@ -4,6 +4,7 @@ from util import Point
 import snake
 import arcade
 import random
+from dql import AgentActions
 
 
 class Type(object):
@@ -42,11 +43,13 @@ class Environment(object):
 
 
     def change_snake_dir(self, symbol):
-        if symbol == arcade.key.LEFT:
+        if symbol == arcade.key.LEFT or symbol == AgentActions.LEFT:
             self.snake.turn_left()
 
-        elif symbol == arcade.key.RIGHT:
+        elif symbol == arcade.key.RIGHT or symbol == AgentActions.RIGHT:
             self.snake.turn_right()
+        elif symbol == AgentActions.NO_ACTION:
+            pass
 
     def update_env(self):
         self.snake.update()
@@ -67,7 +70,7 @@ class Environment(object):
             self.food.random_relocate(self.env)
             return False
         elif self.grid.get_cells()[head_y][head_x] in (Type.BLOCK, Type.WALL):
-    
+
             return True
 
     def update(self):

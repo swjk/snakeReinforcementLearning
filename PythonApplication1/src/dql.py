@@ -2,6 +2,13 @@ import tensorflow as tf
 from tensorflow.python.keras.layers import Input,Dense,Conv3D
 from tensorflow.python.keras.models import Sequential
 import numpy as np
+from enum import Enum
+
+
+class AgentActions(Enum):
+    LEFT  = 0
+    NO_ACTION  = 1
+    RIGHT = 2
 
 class Dql(object):
 
@@ -20,7 +27,7 @@ class Dql(object):
         self.model.add(Conv3D(filters= 32, kernel_size=(4,4,4), strides=(2,2,2), activation="relu"))
         self.model.add(Flatten())
         self.model.add(Dense(256, activation="relu"))
-        self.model.add(Dense(2, activation='softmax'))
+        self.model.add(Dense(3, activation='softmax'))
 
 
     def compile_model():

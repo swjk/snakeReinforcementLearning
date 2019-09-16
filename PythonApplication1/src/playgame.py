@@ -11,15 +11,10 @@ import gui
 from util import FPSCounter
 from dql import Dql
 from PIL import Image
-
-
-class GameState(object):
-    GAME_RUNNING = 0
-    GAME_OVER = 1
+from gamestate import GameState
 
 class GameWindow(arcade.Window):
     def __init__(self):
-        Dql()
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
         arcade.set_background_color(arcade.color.AMAZON)
 
@@ -29,6 +24,12 @@ class GameWindow(arcade.Window):
         self.fps = FPSCounter()
         self.gamestate = GameState.GAME_RUNNING
         self.timer = 0
+
+    def initial_display_state(self):
+        arcade.start_render()
+        self.gui.draw(self.gamestate)
+        arcade.finish_render()
+
 
     def on_draw(self):
         fps = self.fps.get_fps()
@@ -53,19 +54,16 @@ class GameWindow(arcade.Window):
                 if update_result:
                     self.gamestate = GameState.GAME_OVER
 
-
             else:
                 self.timer += x
 
 
 
 
-
-
-
-
 def main():
     window = GameWindow()
+    #window.initial_display_state()
+    #arcade.get_image()
     arcade.run()
 
 if __name__ == "__main__":
