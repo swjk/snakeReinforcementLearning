@@ -1,7 +1,7 @@
 
 
 EPISODES = 100
-TIMESTEPS = 6
+TIMESTEPS = 10
 GAMMA = 0.2
 
 from dql import Dql,AgentActions
@@ -30,8 +30,9 @@ def capture_display():
 
 def main():
     model = Dql()
-    current_sequence = collections.deque()
+
     # for episode in range (0,EPISODES):
+    current_sequence = collections.deque()
     game = GameWindow()
     game.initial_display_state()
     current_sequence.append(image_preprocess(arcade.get_image(),0))
@@ -55,28 +56,40 @@ def main():
             current_sequence.popleft()
             current_sequence.append(image_preprocess(arcade.get_image(),t))
             model.store_transition(previous_sequence,action_t,reward_t, current_sequence)
+
+            if(reward_t == Reward.NEG):
+                break
+
+            #Random minibatch
+            n = model.get_storage_pos()
+            random_sample = np.random.randint(low=n)
+            print ("RandomSample{}".format(random_sample))
+            s_prev, s_curr,s_tns = model.get_transition(random_sample)
+            print(s_tns)
+            if (s_tns[1] == Reward.NEG):
+
+                y = Reward.NEG
+            else:
+                s_curr = s_curr.reshape(1,4,100,100,1)
+                print(model.prediction(s_curr))
+                y = s_tns[1] + GAMMA * np.max(model.prediction(s_curr))
+            s_prev = s_prev.reshape(1,4,100,100,1)
+            model.fit(s_prev,np.array([[0.4,0.2,0.4]]))
+
+
+
+
+
+
         else:
             current_sequence.append(image_preprocess(arcade.get_image(),t))
-    print("Finshed")
-        #Random minibatch
-        # n = model.get_storage_pos
-        # random_sample = random.randint(0,n)
-        #
-        # s_prev, s_curr,s_tns = model.get_transition(random_sample)
-        #
-        #
-        #
-        # if (s_tns[1] == Reward.NEG):
-        #     #THEN s_curr will be terminal
-        #     y = Reward.NEG
-        # else:
-        #     y = s_tns[1] + GAMMA * np.max(model.prediction(s_curr))
-        #
-        # model.fit(s_prev,y)
-        #
-        #
-        #
-        #
+
+            if(reward_t == Reward.NEG):
+                break
+
+
+
+
 
 
 
