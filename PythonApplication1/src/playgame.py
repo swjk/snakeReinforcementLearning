@@ -1,7 +1,7 @@
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 600
 SCREEN_TITLE = "SNAKE"
-PADDING = 200
+PADDING = 250
 
 
 
@@ -49,14 +49,14 @@ class GameWindow(arcade.Window):
         if(self.gamestate == GameState.GAME_OVER):
             pass
         elif(self.gamestate == GameState.GAME_RUNNING):
-            snake_env_states =  self.env.update()
+            snake_env_state =  self.env.update()
             self.gui.update()
             if snake_env_state == SnakeEnvState.EATEN:
                 return Reward.POS
-            elif snake_env_states == SnakeEnvState.COLLISION:
+            elif snake_env_state == SnakeEnvState.COLLISION:
                 self.gamestate = GameState.GAME_OVER
                 return Reward.NEG
-            else
+            else:
                 return Reward.NORM
 
 
