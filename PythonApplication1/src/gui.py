@@ -4,6 +4,7 @@ import numpy as np
 import arcade
 from snake import Direction
 from playgame import GameState
+from PIL import Image
 
 class Block(arcade.Sprite):
     def __init__(self,lx,rx,top, bottom):
@@ -23,7 +24,7 @@ class Wall(arcade.Sprite):
 
         self.height = abs(top-bottom)
         self.width = abs(lx-rx)
-        self._set_color(arcade.color.RED)
+        self._set_color(arcade.color.BLACK)
 
 class SnakeHead(arcade.Sprite):
     def __init__(self,lx,rx,top, bottom):
@@ -34,12 +35,12 @@ class SnakeHead(arcade.Sprite):
         self.height = abs(top-bottom)
         self.width = abs(lx-rx)
 
-        self._set_color(arcade.color.BLUE)
+        self._set_color(arcade.color.BLIZZARD_BLUE)
 
 class SnakeTail(arcade.Sprite):
     def __init__(self,lx=None,rx=None,top=None, bottom=None, center_x=None, center_y=None, height=None, width=None):
         super().__init__("./small.png")
-        self._set_color(arcade.color.RED)
+        self._set_color(arcade.color.DAFFODIL)
         if center_x == None:
             self.center_x = (lx+rx)/2
             self.width = abs(lx-rx)
@@ -145,6 +146,19 @@ class Gui(object):
         y_step = (self.y_end - self.y_start) / env_shape[0]
 
         x,y = self.env.snake.get_head().getTuple()
+
+        image = arcade.get_image()
+        image = image.crop((self.x_start,self.y_start,self.x_end,(self.y_end)))
+        image = image.convert('LA')
+        imagenum = np.array(image)
+        imagenum = imagenum[...,:1]
+
+        print(imagenum.reshape((200,200)))
+        print(imagenum.shape)
+
+        image.save("./images.png")
+
+
 
         if self.env.food.relocated:
             for food_sprite in self.food_sprite.sprite_list:

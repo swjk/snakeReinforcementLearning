@@ -1,7 +1,7 @@
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 600
 SCREEN_TITLE = "SNAKE"
-PADDING = 100
+PADDING = 200
 
 from level import level1
 import environment
@@ -9,6 +9,8 @@ import snake
 import arcade
 import gui
 from util import FPSCounter
+from dql import Dql
+from PIL import Image
 
 
 class GameState(object):
@@ -17,6 +19,7 @@ class GameState(object):
 
 class GameWindow(arcade.Window):
     def __init__(self):
+        Dql()
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
         arcade.set_background_color(arcade.color.AMAZON)
 
@@ -29,7 +32,7 @@ class GameWindow(arcade.Window):
 
     def on_draw(self):
         fps = self.fps.get_fps()
-        
+
         self.fps.tick()
 
         arcade.start_render()
