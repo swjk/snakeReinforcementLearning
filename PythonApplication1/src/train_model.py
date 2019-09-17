@@ -66,22 +66,23 @@ def main():
 
                 #Random minibatch
                 n = model.get_storage_pos()
-                random_sample = np.random.randint(low=n)
-                print ("RandomSample{}".format(random_sample))
-                s_prev, s_curr,s_tns = model.get_transition(random_sample)
-                print(s_tns)
-                if (s_tns[1] == Reward.NEG):
-                    y = Reward.NEG
-                else:
-                    s_curr = s_curr.reshape(1,4,100,100,1)
+                batch_input = np.array([]).reshape(0,4,100,100,1)
+                batch_output= np.array([]).reshape(0,3)
+                for i in range (0, min(n,20)):
+                    random_sample = np.random.randint(low=n)
+                    s_prev, s_curr,s_tns = model.get_transition(random_sample)
+                    if (s_tns[1] == Reward.NEG):
+                        y = Reward.NEG
+                    else:
+                        s_curr = s_curr.reshape(1,4,100,100,1)
+                        y = s_tns[1] + GAMMA * np.max(model.prediction(s_curr))
+                    s_prev = s_prev.reshape(1,4,100,100,1)
 
-                    y = s_tns[1] + GAMMA * np.max(model.prediction(s_curr))
-                s_prev = s_prev.reshape(1,4,100,100,1)
-
-                target = np.array([0,0,0])
-                target[s_tns[0]] = y
-
-                model.fit(s_prev,np.array([target]))
+                    target = np.array([0,0,0])
+                    target[s_tns[0]] = y
+                    batch_output = np.vstack((batch_output,target))
+                    batch_input = np.vstack((batch_input, s_prev))
+                model.fit(batch_input,batch_output)
 
             else:
                 current_sequence.append(image_preprocess(arcade.get_image(),t))
